@@ -1,0 +1,20 @@
+# Cache de Python (archivos compilados)
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Entornos virtuales (MUY IMPORTANTE)
+venv/
+env/
+.env/
+ENV/
+
+# Distribución / Paquetes
+dist/
+build/
+*.egg-info/
+
+# Archivos del sistema u otros (Opcional pero recomendado)
+.DS_Store
+.vscode/
+.idea/
