@@ -1,0 +1,29 @@
+# Cache de Python (archivos compilados)
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Entornos virtuales (MUY IMPORTANTE)
+venv/
+env/
+.env/
+ENV/
+.venv/
+.env
+
+# Distribución / Paquetes
+dist/
+build/
+*.egg-info/
+
+# Archivos del sistema u otros (Opcional pero recomendado)
+.DS_Store
+.vscode/
+.idea/
+
+#Archivos usuario
+*.zip
+.coverage
