@@ -1,0 +1,8 @@
+---
+globs: .py
+alwaysApply: false
+---
+#fichero de reglas python
+
+- Las funciones deben tener formato lowerCamelCase 
+- Todo el código debe estar en inglés
