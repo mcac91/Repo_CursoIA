@@ -48,7 +48,7 @@ Cada bloque termina con un **punto de control** para que el desarrollador confir
 
 ---
 
-## 1) Estructura inicial del proyecto
+## 1) Estructura inicial del proyecto ✅ (COMPLETADO)
 
 Crear/validar la estructura mínima:
 
@@ -61,7 +61,7 @@ Crear/validar la estructura mínima:
 
 Definir también (si aplica al repositorio) `.gitignore` para excluir artefactos típicos (`__pycache__/`, `.pytest_cache/`, etc.).
 
-**Punto de control (confirmación requerida):** estructura creada y ejecutable el esqueleto (aunque aún no haga nada).
+**Punto de control (confirmación requerida):** estructura creada y ejecutable el esqueleto (aunque aún no haga nada). **Estado: completado.**
 
 ---
 
