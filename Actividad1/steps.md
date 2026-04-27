@@ -40,9 +40,9 @@ Cada bloque termina con un **punto de control** para que el desarrollador confir
   - En gestores, devolver `None`, `False` o listas vacías cuando corresponda (evitar excepciones sin controlar).
   - En `main.py`, capturar y manejar errores sin “reventar” la ejecución.
 - **Reglas Python del proyecto (`.cursor/rules/cursor.mdc`)**:
-  - **Funciones en `lowerCamelCase`**.
-  - **Código en inglés** (nombres, mensajes, variables).
-  - **Todas las funciones documentadas en inglés**, incluyendo inputs/outputs si aplica.
+  - **Funciones y variables en formato estándar de Python** (snake_case).
+  - **Código en español** (nombres, mensajes, variables).
+  - **Todas las funciones documentadas en español**, incluyendo inputs/outputs si aplica.
 
 **Punto de control (confirmación requerida):** validar que estas reglas son el “contrato” de implementación antes de escribir código.
 
@@ -67,7 +67,7 @@ Definir también (si aplica al repositorio) `.gitignore` para excluir artefactos
 
 ## 2) Definir el modelo de datos y convenciones internas ✅ (COMPLETADO)
 
-Establecer las convenciones internas (en inglés) para los diccionarios:
+Establecer las convenciones internas (en español) para los diccionarios:
 
 - **Empleado**:
   - `id: int`
@@ -80,7 +80,7 @@ Establecer las convenciones internas (en inglés) para los diccionarios:
   - `fecha_fin: str` (`YYYY-MM-DD`)
   - `salario: float | int` (positivo)
 
-Nota: aunque las claves JSON están fijadas por el enunciado en español (`nombre`, `cargo`, `contratos`), el **código** (variables, funciones, mensajes) debe estar en inglés.
+Nota: las claves JSON están fijadas por el enunciado en español (`nombre`, `cargo`, `contratos`) y el **código** (variables, funciones, mensajes) también debe estar en español.
 
 **Punto de control (confirmación requerida):** confirmar que estas claves y tipos son los usados en toda la app. **Estado: completado.**
 
@@ -106,7 +106,7 @@ Requisitos clave:
 
 ## 4) Implementar `gestor_empleados.py` (métodos obligatorios) ✅ (COMPLETADO)
 
-Implementar exactamente estas funciones (en `lowerCamelCase`) y documentarlas en inglés:
+Implementar exactamente estas funciones (en `snake_case`) y documentarlas en español:
 
 - `agregar_empleado(nombre, cargo) -> dict`
   - Validar `nombre` y `cargo` no vacíos.
@@ -129,7 +129,7 @@ Implementar exactamente estas funciones (en `lowerCamelCase`) y documentarlas en
 
 ## 5) Implementar `gestor_contratos.py` (métodos obligatorios)
 
-Implementar exactamente estas funciones (en `lowerCamelCase`) y documentarlas en inglés:
+Implementar exactamente estas funciones (en `snake_case`) y documentarlas en español:
 
 - `asociar_contrato(id_empleado, fecha_inicio, fecha_fin, salario) -> dict`
   - Validar:
@@ -165,7 +165,7 @@ Requisitos:
 
 - `main.py` **no** accede directamente al JSON.
 - Manejo de errores controlado (entradas inválidas, ids no numéricos, fechas mal formadas, etc.).
-- Mensajes y textos del CLI en inglés (por regla del proyecto).
+- Mensajes y textos del CLI en español (por regla del proyecto).
 
 **Punto de control (confirmación requerida):** flujo CLI completo y estable sin crashes.
 
@@ -217,7 +217,7 @@ Preparar entrega final:
 - [ ] Validaciones: no vacíos, salario \(> 0\), fechas `YYYY-MM-DD`, orden de fechas.
 - [ ] Contratos dentro de `empleado["contratos"]`.
 - [ ] Errores controlados (gestores devuelven valores “seguros”; CLI no revienta).
-- [ ] Código en inglés; funciones `lowerCamelCase`; docstrings en inglés con inputs/outputs.
+- [ ] Código en español; funciones y variables en `snake_case`; docstrings en español con inputs/outputs.
 - [ ] Tests aislados del JSON real (tmp/fixture).
 - [ ] README completo y ZIP final con nombre exacto.
 

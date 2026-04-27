@@ -1,8 +1,8 @@
 """
-Data model conventions for the application.
+Convenciones del modelo de datos para la aplicación.
 
-This module defines the internal data shapes used across the app while keeping
-the JSON keys immutable (Spanish keys required by the spec).
+Este módulo define las estructuras internas de datos usadas en la app,
+manteniendo inmutables las claves del JSON requeridas por la especificación.
 """
 
 from __future__ import annotations
@@ -10,23 +10,29 @@ from __future__ import annotations
 from typing import List, TypedDict, Union
 
 
-Salary = Union[int, float]
+Salario = Union[int, float]
 
 
-class Contract(TypedDict):
+class Contrato(TypedDict):
     id_contrato: int
     fecha_inicio: str
     fecha_fin: str
-    salario: Salary
+    salario: Salario
 
 
-class Employee(TypedDict):
+class Empleado(TypedDict):
     id: int
     nombre: str
     cargo: str
-    contratos: List[Contract]
+    contratos: List[Contrato]
 
 
-class Database(TypedDict):
-    empleados: List[Employee]
+class BaseDatos(TypedDict):
+    empleados: List[Empleado]
+
+
+# Backwards-compatible aliases (will be removed later if desired)
+Contract = Contrato
+Employee = Empleado
+Database = BaseDatos
 

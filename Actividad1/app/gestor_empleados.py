@@ -1,5 +1,5 @@
 """
-Employee management module.
+Módulo de gestión de empleados.
 """
 
 from __future__ import annotations
@@ -7,105 +7,105 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Optional
 
-from app.models import Database, Employee
+from app.models import BaseDatos, Empleado
 from app.repository import JsonRepository
 
 
-def _getDefaultJsonPath() -> Path:
+def _ruta_json_por_defecto() -> Path:
     """
-    Build the default JSON path for this activity folder.
+    Construye la ruta por defecto del JSON para esta actividad.
 
-    Input: none
+    Input: ninguno
     Output: Path
     """
 
     return Path(__file__).resolve().parent / "data" / "empleados.json"
 
 
-def _getNextEmployeeId(db: Database) -> int:
+def _siguiente_id_empleado(db: BaseDatos) -> int:
     """
-    Compute the next employee id by incrementing the current max.
+    Calcula el siguiente id de empleado incrementando el máximo actual.
 
-    Input: db (Database)
+    Input: db (BaseDatos)
     Output: int
     """
 
-    maxId = 0
+    max_id = 0
     for employee in db.get("empleados", []):
         if isinstance(employee, dict):
             candidate = employee.get("id")
-            if isinstance(candidate, int) and candidate > maxId:
-                maxId = candidate
-    return maxId + 1
+            if isinstance(candidate, int) and candidate > max_id:
+                max_id = candidate
+    return max_id + 1
 
 
-def _findEmployeeById(db: Database, employeeId: int) -> Optional[Employee]:
+def _buscar_empleado_por_id(db: BaseDatos, employee_id: int) -> Optional[Empleado]:
     """
-    Find an employee by id.
+    Busca un empleado por id.
 
-    Input: db (Database), employeeId (int)
-    Output: Employee | None
+    Input: db (BaseDatos), employee_id (int)
+    Output: Empleado | None
     """
 
     for employee in db.get("empleados", []):
-        if isinstance(employee, dict) and employee.get("id") == employeeId:
+        if isinstance(employee, dict) and employee.get("id") == employee_id:
             return employee  # type: ignore[return-value]
     return None
 
 
 def agregar_empleado(nombre, cargo) -> dict:
     """
-    Add a new employee to the database.
+    Añade un nuevo empleado a la base de datos.
 
     Input: nombre (str), cargo (str)
-    Output: dict (created employee) or empty dict on failure
+    Output: dict (empleado creado) o dict vacío en caso de fallo
     """
 
     try:
         if not isinstance(nombre, str) or not isinstance(cargo, str):
             return {}
 
-        name = nombre.strip()
-        role = cargo.strip()
-        if name == "" or role == "":
+        nombre_limpio = nombre.strip()
+        cargo_limpio = cargo.strip()
+        if nombre_limpio == "" or cargo_limpio == "":
             return {}
 
-        repo = JsonRepository(_getDefaultJsonPath())
+        repo = JsonRepository(_ruta_json_por_defecto())
         db = repo.loadDatabase()
 
-        newEmployee: Employee = {
-            "id": _getNextEmployeeId(db),
-            "nombre": name,
-            "cargo": role,
+        nuevo_empleado: Empleado = {
+            "id": _siguiente_id_empleado(db),
+            "nombre": nombre_limpio,
+            "cargo": cargo_limpio,
             "contratos": [],
         }
-        db["empleados"].append(newEmployee)
+        db["empleados"].append(nuevo_empleado)
 
         if not repo.saveDatabase(db):
             return {}
 
-        return newEmployee
+        return nuevo_empleado
     except Exception:
         return {}
 
 
 def eliminar_empleado(id) -> bool:
     """
-    Delete an employee by id.
+    Elimina un empleado por id.
 
     Input: id (int)
-    Output: bool (True on success, False otherwise)
+    Output: bool (True si se eliminó, False en caso contrario)
     """
 
     try:
-        employeeId = int(id)
+        employee_id = int(id)
 
-        repo = JsonRepository(_getDefaultJsonPath())
+        repo = JsonRepository(_ruta_json_por_defecto())
         db = repo.loadDatabase()
 
         employees = db.get("empleados", [])
         for idx, employee in enumerate(employees):
-            if isinstance(employee, dict) and employee.get("id") == employeeId:
+            if isinstance(employee, dict) and employee.get("id") == employee_id:
                 del employees[idx]
                 return repo.saveDatabase(db)
 
@@ -116,19 +116,19 @@ def eliminar_empleado(id) -> bool:
 
 def buscar_empleado(id) -> dict:
     """
-    Find an employee by id.
+    Busca un empleado por id.
 
     Input: id (int)
-    Output: dict (employee) or empty dict if not found / invalid
+    Output: dict (empleado) o dict vacío si no existe / no es válido
     """
 
     try:
-        employeeId = int(id)
+        employee_id = int(id)
 
-        repo = JsonRepository(_getDefaultJsonPath())
+        repo = JsonRepository(_ruta_json_por_defecto())
         db = repo.loadDatabase()
 
-        employee = _findEmployeeById(db, employeeId)
+        employee = _buscar_empleado_por_id(db, employee_id)
         return employee if employee is not None else {}
     except Exception:
         return {}

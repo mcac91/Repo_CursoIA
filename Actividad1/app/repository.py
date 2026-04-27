@@ -1,8 +1,8 @@
 """
-JSON persistence repository.
+Repositorio de persistencia en JSON.
 
-This is the single point of access to the employees JSON file, enforcing the
-immutable JSON schema required by the project.
+Este es el único punto de acceso al fichero JSON de empleados, forzando el
+esquema inmutable requerido por el proyecto.
 """
 
 from __future__ import annotations
@@ -12,45 +12,45 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Optional
 
-from app.models import Database
+from app.models import BaseDatos
 
 
-def _emptyDatabase() -> Database:
+def _base_datos_vacia() -> BaseDatos:
     """
-    Return a valid empty database structure.
+    Devuelve una estructura válida de base de datos vacía.
 
-    Input: none
-    Output: Database
+    Input: ninguno
+    Output: BaseDatos
     """
 
     return {"empleados": []}
 
 
-def _coerceDatabase(payload: Any) -> Database:
+def _forzar_base_datos(payload: Any) -> BaseDatos:
     """
-    Coerce an arbitrary JSON payload into a safe Database structure.
+    Convierte un payload arbitrario en una estructura BaseDatos segura.
 
     Input: payload (Any)
-    Output: Database
+    Output: BaseDatos
     """
 
     if not isinstance(payload, dict):
-        return _emptyDatabase()
+        return _base_datos_vacia()
 
     empleados = payload.get("empleados")
     if not isinstance(empleados, list):
-        return _emptyDatabase()
+        return _base_datos_vacia()
 
-    return {"empleados": empleados}  # keep immutable top-level key
+    return {"empleados": empleados}  # mantener clave superior inmutable
 
 
 @dataclass(frozen=True)
 class JsonRepository:
     """
-    Repository that loads/saves the database from/to a JSON file.
+    Repositorio que carga/guarda la base de datos en un fichero JSON.
 
     Input: jsonPath (Path | str)
-    Output: JsonRepository instance
+    Output: instancia de JsonRepository
     """
 
     jsonPath: Path
@@ -62,37 +62,37 @@ class JsonRepository:
             Path(jsonPath) if jsonPath is not None else Path("app/data/empleados.json"),
         )
 
-    def loadDatabase(self) -> Database:
+    def loadDatabase(self) -> BaseDatos:
         """
-        Load the database from disk. If missing/empty/corrupted, return an empty database.
+        Carga la base de datos desde disco. Si falta/está vacío/está corrupto, devuelve una base vacía.
 
-        Input: none
-        Output: Database
+        Input: ninguno
+        Output: BaseDatos
         """
 
         try:
             if not self.jsonPath.exists():
-                return _emptyDatabase()
+                return _base_datos_vacia()
 
             raw = self.jsonPath.read_text(encoding="utf-8").strip()
             if raw == "":
-                return _emptyDatabase()
+                return _base_datos_vacia()
 
             payload = json.loads(raw)
-            return _coerceDatabase(payload)
+            return _forzar_base_datos(payload)
         except Exception:
-            return _emptyDatabase()
+            return _base_datos_vacia()
 
-    def saveDatabase(self, db: Database) -> bool:
+    def saveDatabase(self, db: BaseDatos) -> bool:
         """
-        Save the database to disk, enforcing the immutable JSON schema.
+        Guarda la base de datos en disco, forzando el esquema JSON inmutable.
 
-        Input: db (Database)
-        Output: bool (True on success, False otherwise)
+        Input: db (BaseDatos)
+        Output: bool (True si se guardó, False en caso contrario)
         """
 
         try:
-            safeDb = _coerceDatabase(db)
+            safeDb = _forzar_base_datos(db)
             self.jsonPath.parent.mkdir(parents=True, exist_ok=True)
             self.jsonPath.write_text(
                 json.dumps(safeDb, ensure_ascii=False, indent=2),

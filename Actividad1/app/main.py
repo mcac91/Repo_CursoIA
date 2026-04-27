@@ -1,10 +1,10 @@
 """
-CLI entrypoint for the Employee & Contracts Directory application.
+Punto de entrada CLI para la aplicación de directorio de empleados y contratos.
 """
 
 
 def main() -> None:
-    print("Scaffold created. Implementation pending (see steps.md).")
+    print("Estructura creada. Implementación pendiente (ver steps.md).")
 
 
 if __name__ == "__main__":
