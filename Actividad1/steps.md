@@ -86,7 +86,7 @@ Nota: aunque las claves JSON están fijadas por el enunciado en español (`nombr
 
 ---
 
-## 3) Implementar repositorio de persistencia (`JsonRepository`)
+## 3) Implementar repositorio de persistencia (`JsonRepository`) ✅ (COMPLETADO)
 
 Crear una clase repositorio responsable de:
 
@@ -100,11 +100,11 @@ Requisitos clave:
 - Nadie fuera del repositorio lee/escribe el JSON.
 - Las operaciones devuelven resultados controlados (sin excepciones no manejadas propagándose a `main.py`).
 
-**Punto de control (confirmación requerida):** persistencia funcionando (leer/guardar) y formato JSON inmutable garantizado.
+**Punto de control (confirmación requerida):** persistencia funcionando (leer/guardar) y formato JSON inmutable garantizado. **Estado: completado.**
 
 ---
 
-## 4) Implementar `gestor_empleados.py` (métodos obligatorios)
+## 4) Implementar `gestor_empleados.py` (métodos obligatorios) ✅ (COMPLETADO)
 
 Implementar exactamente estas funciones (en `lowerCamelCase`) y documentarlas en inglés:
 
@@ -123,7 +123,7 @@ Implementar exactamente estas funciones (en `lowerCamelCase`) y documentarlas en
   - Si existe, devolver dict del empleado.
   - Si no existe, devolver `None` (o dict vacío) de forma consistente.
 
-**Punto de control (confirmación requerida):** operaciones de empleado completas, con validación y persistencia centralizada.
+**Punto de control (confirmación requerida):** operaciones de empleado completas, con validación y persistencia centralizada. **Estado: completado.**
 
 ---
 
