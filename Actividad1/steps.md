@@ -65,7 +65,7 @@ Definir también (si aplica al repositorio) `.gitignore` para excluir artefactos
 
 ---
 
-## 2) Definir el modelo de datos y convenciones internas
+## 2) Definir el modelo de datos y convenciones internas ✅ (COMPLETADO)
 
 Establecer las convenciones internas (en inglés) para los diccionarios:
 
@@ -82,7 +82,7 @@ Establecer las convenciones internas (en inglés) para los diccionarios:
 
 Nota: aunque las claves JSON están fijadas por el enunciado en español (`nombre`, `cargo`, `contratos`), el **código** (variables, funciones, mensajes) debe estar en inglés.
 
-**Punto de control (confirmación requerida):** confirmar que estas claves y tipos son los usados en toda la app.
+**Punto de control (confirmación requerida):** confirmar que estas claves y tipos son los usados en toda la app. **Estado: completado.**
 
 ---
 
