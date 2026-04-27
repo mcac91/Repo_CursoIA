@@ -16,6 +16,7 @@ Consultar contratos vencidos.
 Guardar/cargar datos en JSON.
 Incluir menú por terminal.
 Implementar pruebas unitarias con pytest.
+
 3. RESPUESTA ESPERADA (R)
 
 Entrega final con:
@@ -27,6 +28,7 @@ empleados.json (autogenerable)
 /tests con pytest
 README.md
 Zip final: actmod2_nombre_apellido.zip
+
 4. FORMATO (F)
 Python 3.x
 Persistencia en JSON

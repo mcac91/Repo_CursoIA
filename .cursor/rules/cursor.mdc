@@ -6,3 +6,4 @@ alwaysApply: false
 
 - Las funciones deben tener formato lowerCamelCase 
 - Todo el código debe estar en inglés
+- Todas las funciones deben estar comentadas en inglés con una breve descripción e indicando sus input y output si los tuviera
