@@ -31,25 +31,25 @@ def _siguiente_id_empleado(db: BaseDatos) -> int:
     """
 
     max_id = 0
-    for employee in db.get("empleados", []):
-        if isinstance(employee, dict):
-            candidate = employee.get("id")
-            if isinstance(candidate, int) and candidate > max_id:
-                max_id = candidate
+    for empleado in db.get("empleados", []):
+        if isinstance(empleado, dict):
+            candidato = empleado.get("id")
+            if isinstance(candidato, int) and candidato > max_id:
+                max_id = candidato
     return max_id + 1
 
 
-def _buscar_empleado_por_id(db: BaseDatos, employee_id: int) -> Optional[Empleado]:
+def _buscar_empleado_por_id(db: BaseDatos, id_empleado: int) -> Optional[Empleado]:
     """
     Busca un empleado por id.
 
-    Input: db (BaseDatos), employee_id (int)
+    Input: db (BaseDatos), id_empleado (int)
     Output: Empleado | None
     """
 
-    for employee in db.get("empleados", []):
-        if isinstance(employee, dict) and employee.get("id") == employee_id:
-            return employee  # type: ignore[return-value]
+    for empleado in db.get("empleados", []):
+        if isinstance(empleado, dict) and empleado.get("id") == id_empleado:
+            return empleado  # type: ignore[return-value]
     return None
 
 
@@ -98,15 +98,15 @@ def eliminar_empleado(id) -> bool:
     """
 
     try:
-        employee_id = int(id)
+        id_empleado = int(id)
 
         repo = JsonRepository(_ruta_json_por_defecto())
         db = repo.loadDatabase()
 
-        employees = db.get("empleados", [])
-        for idx, employee in enumerate(employees):
-            if isinstance(employee, dict) and employee.get("id") == employee_id:
-                del employees[idx]
+        empleados = db.get("empleados", [])
+        for idx, empleado in enumerate(empleados):
+            if isinstance(empleado, dict) and empleado.get("id") == id_empleado:
+                del empleados[idx]
                 return repo.saveDatabase(db)
 
         return False
@@ -123,13 +123,13 @@ def buscar_empleado(id) -> dict:
     """
 
     try:
-        employee_id = int(id)
+        id_empleado = int(id)
 
         repo = JsonRepository(_ruta_json_por_defecto())
         db = repo.loadDatabase()
 
-        employee = _buscar_empleado_por_id(db, employee_id)
-        return employee if employee is not None else {}
+        empleado = _buscar_empleado_por_id(db, id_empleado)
+        return empleado if empleado is not None else {}
     except Exception:
         return {}
 

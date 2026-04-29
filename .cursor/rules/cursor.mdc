@@ -4,6 +4,6 @@ alwaysApply: false
 ---
 #fichero de reglas python
 
-- Las funciones deben tener formato lowerCamelCase 
-- Todo el código debe estar en inglés
-- Todas las funciones deben estar comentadas en inglés con una breve descripción e indicando sus input y output si los tuviera
+- Las funciones y variables deben tener formato estándar de python 
+- Todo el código debe estar en español
+- Todas las funciones deben estar comentadas en español con una breve descripción e indicando sus input y output si los tuviera
