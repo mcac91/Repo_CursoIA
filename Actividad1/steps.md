@@ -127,7 +127,7 @@ Implementar exactamente estas funciones (en `snake_case`) y documentarlas en esp
 
 ---
 
-## 5) Implementar `gestor_contratos.py` (métodos obligatorios)
+## 5) Implementar `gestor_contratos.py` (métodos obligatorios) ✅ (COMPLETADO)
 
 Implementar exactamente estas funciones (en `snake_case`) y documentarlas en español:
 
@@ -146,11 +146,11 @@ Implementar exactamente estas funciones (en `snake_case`) y documentarlas en esp
   - Evaluar contratos cuya `fecha_fin` sea anterior a la fecha actual.
   - Devolver lista (vacía si no hay).
 
-**Punto de control (confirmación requerida):** contratos asociados correctamente y listado de vencidos fiable.
+**Punto de control (confirmación requerida):** contratos asociados correctamente y listado de vencidos fiable. **Estado: completado.**
 
 ---
 
-## 6) Implementar `main.py` (CLI mínima obligatoria)
+## 6) Implementar `main.py` (CLI mínima obligatoria) ✅ (COMPLETADO)
 
 Construir un menú CLI claro y minimalista con, como mínimo:
 
@@ -167,11 +167,11 @@ Requisitos:
 - Manejo de errores controlado (entradas inválidas, ids no numéricos, fechas mal formadas, etc.).
 - Mensajes y textos del CLI en español (por regla del proyecto).
 
-**Punto de control (confirmación requerida):** flujo CLI completo y estable sin crashes.
+**Punto de control (confirmación requerida):** flujo CLI completo y estable sin crashes. **Estado: completado.**
 
 ---
 
-## 7) Pruebas unitarias (`pytest`)
+## 7) Pruebas unitarias (`pytest`) ✅ (COMPLETADO)
 
 Crear `tests/` con pruebas para:
 
@@ -185,11 +185,11 @@ Regla crítica:
 - Las pruebas **no** deben usar el `empleados.json` real del proyecto:
   - Usar archivo temporal/fixture (p. ej. `tmp_path`) e inyectarlo al repositorio.
 
-**Punto de control (confirmación requerida):** `pytest` pasa en limpio (todas las pruebas en verde).
+**Punto de control (confirmación requerida):** `pytest` pasa en limpio (todas las pruebas en verde). **Estado: completado.**
 
 ---
 
-## 8) README y entrega
+## 8) README y entrega ✅ (COMPLETADO)
 
 Crear `README.md` incluyendo:
 
@@ -204,20 +204,20 @@ Preparar entrega final:
 - `empleados.json` autogenerable (no imprescindible incluirlo con datos).
 - ZIP con nombre exacto: `actmod2_nombre_apellido.zip`
 
-**Punto de control (confirmación requerida):** documentación completa y empaquetado conforme al formato.
+**Punto de control (confirmación requerida):** documentación completa y empaquetado conforme al formato. **Estado: completado.**
 
 ---
 
 ## Checklist final de cumplimiento
 
-- [ ] Firmas mínimas implementadas sin cambios.
-- [ ] Persistencia centralizada (solo repositorio toca JSON).
-- [ ] JSON con estructura y claves inmutables.
-- [ ] IDs autogenerados incrementalmente.
-- [ ] Validaciones: no vacíos, salario \(> 0\), fechas `YYYY-MM-DD`, orden de fechas.
-- [ ] Contratos dentro de `empleado["contratos"]`.
-- [ ] Errores controlados (gestores devuelven valores “seguros”; CLI no revienta).
-- [ ] Código en español; funciones y variables en `snake_case`; docstrings en español con inputs/outputs.
-- [ ] Tests aislados del JSON real (tmp/fixture).
-- [ ] README completo y ZIP final con nombre exacto.
+- [x] Firmas mínimas implementadas sin cambios.
+- [x] Persistencia centralizada (solo repositorio toca JSON).
+- [x] JSON con estructura y claves inmutables.
+- [x] IDs autogenerados incrementalmente.
+- [x] Validaciones: no vacíos, salario > 0, fechas YYYY-MM-DD, orden de fechas.
+- [x] Contratos dentro de empleado["contratos"].
+- [x] Errores controlados (gestores devuelven valores "seguros"; CLI no revienta).
+- [x] Código en español; funciones y variables en snake_case; docstrings en español con inputs/outputs.
+- [x] Tests aislados del JSON real (tmp/fixture).
+- [x] README completo y ZIP final con nombre exacto.
 
