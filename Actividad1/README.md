@@ -76,7 +76,20 @@ python -m pytest tests/
 
 Todas las pruebas pasan y usan archivos temporales para no afectar el JSON real.
 
-## Entrega
+## Mejoras identificadas (no implementadas)
 
-El proyecto se empaqueta en un archivo ZIP con nombre `actmod2_nombre_apellido.zip`, incluyendo toda la estructura y archivos necesarios.
+Tras la validación completa del proyecto se han identificado varias mejoras y optimizaciones que podrían aumentar la calidad y funcionalidad del sistema. Sin embargo, estas mejoras no se han implementado con el objetivo de evitar un mayor consumo de tokens de IA.
+
+Las mejoras detectadas son las siguientes:
+
+- **Mejora 1: Visualización de datos en CLI más legible**  
+  Mejorar el formato de salida en terminal para presentar la información de forma más clara y estructurada, facilitando la lectura y comprensión por parte del usuario.
+
+- **Mejora 2: Validación inmediata de campos introducidos**  
+  Implementar una validación en tiempo real que permita detectar y notificar errores en los campos en el momento en que se introducen, evitando esperar hasta la finalización del proceso y proporcionando mensajes de error más específicos.
+
+- **Mejora 3: Actualización de empleados y contratos mediante ID**  
+  Añadir la funcionalidad de actualización de registros de empleados y contratos utilizando su identificador (ID), permitiendo modificar datos existentes de forma más directa y eficiente.
+
+Estas mejoras quedan registradas como posibles ampliaciones para futuras versiones del proyecto.
 
