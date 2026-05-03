@@ -61,9 +61,11 @@ Para salir, seleccione opción 6.
   - `gestor_contratos.py`: Lógica de gestión de contratos.
   - `repository.py`: Repositorio para persistencia JSON.
   - `models.py`: Definiciones de tipos de datos.
+  - `data/empleados.json`: Archivo de datos autogenerable.
 - `tests/`: Pruebas unitarias con pytest.
 - `steps.md`: Memoria del proyecto y pasos de implementación.
-- `empleados.json`: Archivo de datos autogenerable (no incluido inicialmente).
+- `cursor_agent.md`: Resumen de la conversación del agente IA de Cursor.
+- `conversationIA.md`: Registro de la conversación en VS Code.
 
 ## Pruebas
 
