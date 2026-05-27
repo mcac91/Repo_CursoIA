@@ -67,10 +67,10 @@ class SocialMediaPostSchema(BaseModel):
     title: str
     tone: str
     content: str
-    hashtags: Optional[List[str]] = []
+    hashtags: Optional[List[str]] = Field(default_factory=list)
     link: Optional[str] = None
     language: Optional[str] = None
-    variants: Optional[List[str]] = []
+    variants: Optional[List[str]] = Field(default_factory=list)
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
 
@@ -88,10 +88,10 @@ class SocialMediaPostCreateSchema(BaseModel):
     title: str = Field(..., max_length=200)
     tone: str = Field(..., max_length=100)
     content: str = Field(...)
-    hashtags: Optional[List[str]] = Field(default=[])
+    hashtags: Optional[List[str]] = Field(default_factory=list)
     link: Optional[str] = None
     language: Optional[str] = None
-    variants: Optional[List[str]] = Field(default=[])
+    variants: Optional[List[str]] = Field(default_factory=list)
 
 
 class SocialMediaPostUpdateSchema(BaseModel):

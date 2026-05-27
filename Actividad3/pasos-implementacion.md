@@ -80,6 +80,8 @@ Entidad principal: `SocialMediaPost`.
 
 > Checkpoint 3: valida el modelo de datos final y si deseas incluir campos extra.
 
+> ✅ Checkpoint 3 completado: modelo `SocialMediaPost` incluye `language`, `variants`, `created_at` y `updated_at`.
+
 ## 4. Schemas Pydantic
 
 Crear al menos dos schemas:
@@ -95,6 +97,8 @@ Crear al menos dos schemas:
 - Opcionalmente, incluir campos como `language` y `variants` si los agregas al modelo.
 
 > Checkpoint 4: revisa y valida los schemas antes de continuar.
+
+> ✅ Checkpoint 4 completado: schemas `SocialMediaPostSchema` y `SocialMediaPostsSchema` definidos correctamente con `from_attributes=True` y campos opcionales.
 
 ## 5. Variables de entorno y configuración
 
