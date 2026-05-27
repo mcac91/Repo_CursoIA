@@ -105,6 +105,20 @@ def run_chat() -> None:
             )
             assistant_text = completion.choices[0].message.content or ""
             print(f"Asistente: {assistant_text}\n")
+
+            # Mostrar uso para poder estimar costes con Pricing Calculator
+            usage = getattr(completion, "usage", None)
+            if usage:
+                print(
+                    "Uso tokens -> prompt_tokens={pt}, completion_tokens={ct}, total_tokens={tt}".format(
+                        pt=getattr(usage, "prompt_tokens", None),
+                        ct=getattr(usage, "completion_tokens", None),
+                        tt=getattr(usage, "total_tokens", None),
+                    )
+                )
+            else:
+                print("Uso tokens -> (no disponible en la respuesta)")
+
             messages.append({"role": "assistant", "content": assistant_text})
         except Exception as e:
             print("Error al comunicarse con Azure OpenAI:", str(e))

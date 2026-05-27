@@ -95,9 +95,9 @@
 **Objetivo:** documentar pruebas y análisis.
 
 Realizar y registrar los 3 casos:
-1. **Caso 1:** recomendación de libros (prompt definido por ti)
-2. **Caso 2:** respuesta técnica (Python/IA)
-3. **Caso 3:** generación creativa (poema infantil u otro, según acuerdo)
+1. **Caso 1:** curiosidades sobre física a nivel divulgativo
+2. **Caso 2:** respuesta técnica (c++)
+3. **Caso 3:** generación canción infantil breve
 
 Para cada caso:
 - ejecutar el chatbot
