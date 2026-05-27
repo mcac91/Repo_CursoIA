@@ -9,12 +9,12 @@ from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException, status
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 from sqlalchemy import Column, DateTime, Integer, String, Text, create_engine
-from sqlalchemy.orm import DeclarativeBase, Session, mapped_column, sessionmaker
+from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, sessionmaker
 from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_exponential
 
-from langchain.chat_models import AzureChatOpenAI, ChatOllama
-from langchain.output_parsers import PydanticOutputParser
-from langchain.schema import HumanMessage, SystemMessage
+from langchain_openai import AzureChatOpenAI
+from langchain_ollama import ChatOllama
+from langchain_core.messages import HumanMessage, SystemMessage
 
 # Cargar variables de entorno
 load_dotenv()
@@ -48,17 +48,17 @@ class Base(DeclarativeBase):
 class SocialMediaPost(Base):
     __tablename__ = "social_media_posts"
 
-    id: int = mapped_column(Integer, primary_key=True, index=True)
-    platform: str = mapped_column(String(50), nullable=False)
-    title: str = mapped_column(String(200), nullable=False)
-    tone: str = mapped_column(String(100), nullable=False)
-    content: str = mapped_column(Text, nullable=False)
-    hashtags: Optional[str] = mapped_column(Text, nullable=True)
-    link: Optional[str] = mapped_column(String(500), nullable=True)
-    language: Optional[str] = mapped_column(String(20), nullable=True)
-    variants: Optional[str] = mapped_column(Text, nullable=True)
-    created_at: datetime = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at: datetime = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    platform: Mapped[str] = mapped_column(String(50), nullable=False)
+    title: Mapped[str] = mapped_column(String(200), nullable=False)
+    tone: Mapped[str] = mapped_column(String(100), nullable=False)
+    content: Mapped[str] = mapped_column(Text, nullable=False)
+    hashtags: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    link: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    language: Mapped[Optional[str]] = mapped_column(String(20), nullable=True)
+    variants: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
 
 class SocialMediaPostSchema(BaseModel):
@@ -135,7 +135,7 @@ def validate_link(link: Optional[str]) -> Optional[str]:
     if parsed.scheme not in {"http", "https"} or not parsed.netloc:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail="El enlace debe ser una URL válida con http:// o https://.",
+            detail="El link debe ser una URL válida con http:// o https://.",
         )
     return link
 
@@ -207,7 +207,7 @@ def get_llm_client():
     return AzureChatOpenAI(
         deployment_name=AZURE_OPENAI_DEPLOYMENT,
         openai_api_version=AZURE_OPENAI_API_VERSION,
-        openai_api_base=AZURE_OPENAI_ENDPOINT,
+        azure_endpoint=AZURE_OPENAI_ENDPOINT,
         openai_api_key=AZURE_OPENAI_API_KEY,
         model=MODEL_NAME,
     )
@@ -230,12 +230,15 @@ def build_generate_prompt(request: GeneratePostRequest) -> str:
 
 
 def parse_post_output(raw_text: str) -> SocialMediaPostSchema:
-    parser = PydanticOutputParser(pydantic_object=SocialMediaPostSchema)
     try:
-        parsed = parser.parse(raw_text)
+        parsed_dict = json.loads(raw_text)
+    except json.JSONDecodeError as exc:
+        raise ValueError("Respuesta de IA inválida: no es JSON válido.") from exc
+
+    try:
+        return SocialMediaPostSchema.model_validate(parsed_dict)
     except ValidationError as exc:
         raise ValueError("Respuesta de IA inválida o no ajustada al esquema esperado.") from exc
-    return parsed
 
 
 @retry(
@@ -253,7 +256,7 @@ def generate_post_with_llm(request: GeneratePostRequest) -> SocialMediaPostSchem
     human_text = build_generate_prompt(request)
     messages = [SystemMessage(content=system_text), HumanMessage(content=human_text)]
 
-    response = llm.predict_messages(messages)
+    response = llm.invoke(messages)
     raw_output = response.content if hasattr(response, "content") else str(response)
     try:
         return parse_post_output(raw_output)
@@ -399,4 +402,4 @@ def generate_content(request: GeneratePostRequest, session: Session = Depends(ge
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=False)
+    uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=False)

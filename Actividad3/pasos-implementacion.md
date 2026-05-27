@@ -113,8 +113,11 @@ Es importante configurar la aplicación mediante variables de entorno en lugar d
 - `AZURE_OPENAI_DEPLOYMENT=`  (solo si usas Azure)
 - `OLLAMA_URL=`  (solo si usas Ollama local)
 - `MODEL_NAME=gpt-5.4-nano` o `gemma3:1b`
+- `LLM_PROVIDER=azure` o `ollama`
 
 > Checkpoint 5: confirma la configuración de entorno y proveedor de IA elegido.
+
+> ✅ Checkpoint 5 completado: configuración de entorno preparada con `dotenv`, selección de proveedor `LLM_PROVIDER`, y `.env.example` añadido.
 
 ## 6. Endpoints REST necesarios
 
@@ -134,6 +137,8 @@ Implementar estos endpoints en el archivo único:
 - La respuesta de los demás endpoints no debe depender de IA.
 
 > Checkpoint 6: valida que el CRUD básico funciona con datos manuales antes de añadir IA.
+
+> ✅ Checkpoint 6 completado: los endpoints CRUD básicos (`GET`, `POST`, `PUT`, `DELETE`) funcionan correctamente contra SQLite.
 
 ## 7. Diseño del endpoint `/api/contents/generate`
 
