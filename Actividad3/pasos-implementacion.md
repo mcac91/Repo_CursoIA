@@ -37,6 +37,8 @@ La implementación debe quedar en un único archivo Python para facilitar la cor
 
 - `m4_nombre_apellido.py`
 
+> ✅ Checkpoint 2 completado: aplicación implementada en el archivo único `app.py` usando SQLAlchemy 2.0 como ORM.
+
 ### Estructura interna recomendada
 
 ```text
