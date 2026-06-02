@@ -170,6 +170,8 @@ Implementar estos endpoints en el archivo único:
 
 > Checkpoint 7: comprueba que `/api/contents/generate` produce salida estructurada y persiste el resultado.
 
+> ✅ Checkpoint 7 completado: el endpoint de generación está implementado, produce salida estructurada y persiste el post en SQLite (ver prueba con simulación de LLM).
+
 ## 8. Generación estructurada y reintentos
 
 ### Estructura de salida
@@ -195,6 +197,8 @@ retry(
 ```
 
 > Checkpoint 8: valida la lógica de reintentos y la robustez de la llamada al LLM.
+
+> ✅ Checkpoint 8 completado: la función `generate_post_with_llm` utiliza `tenacity` con `stop_after_attempt(3)` y `wait_exponential(1, 2, 10)`, retrya ante errores transitorios y JSON inválido.
 
 ## 9. Reglas de negocio y validaciones
 
@@ -231,6 +235,8 @@ Permitir al menos:
 
 > Checkpoint 9: revisa y aprueba las reglas de negocio que aplicarás en los schemas o en los endpoints.
 
+> ✅ Checkpoint 9 completado: validaciones de plataforma, longitud, hashtags, link y variantes implementadas en `app.py`.
+
 ## 10. Base de datos y creación de tablas
 
 La base de datos debe configurarse para autogenerar la tabla al iniciar la app.
@@ -246,8 +252,6 @@ La base de datos debe configurarse para autogenerar la tabla al iniciar la app.
 ## 11. Validación y pruebas locales
 
 Probar todos los endpoints con:
-
-incluye en el fichero @file:pasos-implementacion.md como condición para el agente que debe seguir las reglas definidas en @AGENT_
 
 - `curl` / `httpie`
 - Postman

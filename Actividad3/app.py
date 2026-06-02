@@ -4,6 +4,7 @@ import json
 from datetime import datetime
 from typing import Generator, List, Optional
 from urllib.parse import urlparse
+from enum import Enum
 
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException, status
@@ -29,6 +30,26 @@ MODEL_NAME = os.getenv("MODEL_NAME", "gpt-5.4-nano")
 LLM_PROVIDER = os.getenv("LLM_PROVIDER", "azure").lower()
 
 SUPPORTED_PLATFORMS = {"LinkedIn", "X", "Instagram", "Facebook", "TikTok"}
+
+
+class PlatformEnum(str, Enum):
+    LinkedIn = "LinkedIn"
+    X = "X"
+    Instagram = "Instagram"
+    Facebook = "Facebook"
+    TikTok = "TikTok"
+
+
+class ToneEnum(str, Enum):
+    divulgativo = "divulgativo"
+    informativo = "informativo"
+    técnico = "técnico"
+    humoristico = "humoristico"
+    motivacional = "motivacional"
+    interactivo = "interactivo"
+    comercial = "comercial"
+
+
 PLATFORM_MAX_LENGTH = {
     "X": 280,
     "LinkedIn": 3000,
@@ -84,9 +105,9 @@ class SocialMediaPostsSchema(BaseModel):
 
 
 class SocialMediaPostCreateSchema(BaseModel):
-    platform: str = Field(..., description="Red social admitida")
+    platform: PlatformEnum = Field(..., description="Red social admitida")
     title: str = Field(..., max_length=200)
-    tone: str = Field(..., max_length=100)
+    tone: ToneEnum = Field(..., max_length=100)
     content: str = Field(...)
     hashtags: Optional[List[str]] = Field(default_factory=list)
     link: Optional[str] = None
@@ -94,10 +115,11 @@ class SocialMediaPostCreateSchema(BaseModel):
     variants: Optional[List[str]] = Field(default_factory=list)
 
 
+
 class SocialMediaPostUpdateSchema(BaseModel):
-    platform: Optional[str] = None
+    platform: Optional[PlatformEnum] = None
     title: Optional[str] = Field(default=None, max_length=200)
-    tone: Optional[str] = Field(default=None, max_length=100)
+    tone: Optional[ToneEnum] = Field(default=None, max_length=100)
     content: Optional[str] = None
     hashtags: Optional[List[str]] = None
     link: Optional[str] = None
@@ -105,12 +127,14 @@ class SocialMediaPostUpdateSchema(BaseModel):
     variants: Optional[List[str]] = None
 
 
+
 class GeneratePostRequest(BaseModel):
     prompt: str = Field(..., min_length=1)
-    platform: str
-    tone: str
+    platform: PlatformEnum
+    tone: ToneEnum
     language: Optional[str] = None
     variants: Optional[int] = Field(default=1, ge=1, le=5)
+
 
 
 class GeneratePostResponse(BaseModel):
@@ -119,7 +143,9 @@ class GeneratePostResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-def validate_platform(platform: str) -> str:
+def validate_platform(platform: str | PlatformEnum) -> str:
+    if isinstance(platform, PlatformEnum):
+        platform = platform.value
     if platform not in SUPPORTED_PLATFORMS:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -161,6 +187,18 @@ def normalize_hashtags(hashtags: Optional[List[str]]) -> List[str]:
             detail="Máximo 10 hashtags permitidos.",
         )
     return unique
+
+
+def validate_tone(tone: str | ToneEnum) -> str:
+    if isinstance(tone, ToneEnum):
+        tone = tone.value
+    allowed = {tone_enum.value for tone_enum in ToneEnum}
+    if tone not in allowed:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Tono no admitido: {tone}. Debe ser uno de {sorted(allowed)}.",
+        )
+    return tone
 
 
 def validate_content_length(platform: str, content: str) -> None:
@@ -230,6 +268,7 @@ def build_generate_prompt(request: GeneratePostRequest) -> str:
 
 
 def parse_post_output(raw_text: str) -> SocialMediaPostSchema:
+    """Parsea una respuesta JSON y la valida contra el esquema."""
     try:
         parsed_dict = json.loads(raw_text)
     except json.JSONDecodeError as exc:
@@ -247,34 +286,41 @@ def parse_post_output(raw_text: str) -> SocialMediaPostSchema:
     wait=wait_exponential(multiplier=1, min=2, max=10),
 )
 def generate_post_with_llm(request: GeneratePostRequest) -> SocialMediaPostSchema:
+    """Genera un post usando salida estructurada hacia el esquema Pydantic."""
     llm = get_llm_client()
+
+    # Structured output (checkpoint 7)
+    structured_llm = llm.with_structured_output(SocialMediaPostSchema)
 
     system_text = (
         "Eres un asistente experto en creación de publicaciones para redes sociales. "
-        "Genera siempre JSON válido de acuerdo al esquema Pydantic."
+        "Genera el resultado EXACTAMENTE con el esquema solicitado."
     )
     human_text = build_generate_prompt(request)
     messages = [SystemMessage(content=system_text), HumanMessage(content=human_text)]
 
-    response = llm.invoke(messages)
-    raw_output = response.content if hasattr(response, "content") else str(response)
+    # Con structured output, el modelo retorna directamente un objeto validado.
     try:
+        return structured_llm.invoke(messages)
+    except Exception:
+        # Fallback: ruta JSON/parse (por si el provider no soporta structured output)
+        response = llm.invoke(messages)
+        raw_output = response.content if hasattr(response, "content") else str(response)
         return parse_post_output(raw_output)
-    except ValueError:
-        # En caso de JSON inválido, reintentar
-        raise
 
 
 def build_post_entity(data: SocialMediaPostCreateSchema) -> SocialMediaPost:
     hashtags = normalize_hashtags(data.hashtags)
-    validate_platform(data.platform)
+    platform = validate_platform(data.platform)
+    tone = validate_tone(data.tone)
     validate_link(data.link)
-    validate_content_length(data.platform, data.content)
+    validate_content_length(platform, data.content)
     variants = normalize_variants(data.variants)
     return SocialMediaPost(
-        platform=data.platform,
+        platform=platform,
         title=data.title.strip(),
-        tone=data.tone.strip(),
+        tone=tone.strip(),
+
         content=data.content.strip(),
         hashtags=json.dumps(hashtags, ensure_ascii=False) if hashtags else None,
         link=data.link.strip() if data.link else None,
@@ -335,14 +381,37 @@ def update_post(post_id: int, request: SocialMediaPostUpdateSchema, session: Ses
 
     update_data = request.model_dump(exclude_unset=True)
     if "platform" in update_data:
-        validate_platform(update_data["platform"])
-        post.platform = update_data["platform"].strip()
+        post.platform = validate_platform(update_data["platform"]).strip()
+    if "tone" in update_data:
+        post.tone = validate_tone(update_data["tone"]).strip()
+    if "title" in update_data:
+        post.title = update_data["title"].strip()
+    if "content" in update_data:
+        platform_for_content = update_data.get("platform", post.platform)
+        validate_content_length(platform_for_content, update_data["content"])
+        post.content = update_data["content"].strip()
+    if "hashtags" in update_data:
+        post.hashtags = json.dumps(normalize_hashtags(update_data["hashtags"]), ensure_ascii=False)
+    if "link" in update_data:
+        post.link = validate_link(update_data["link"])
+    if "language" in update_data:
+        post.language = update_data["language"].strip() if update_data["language"] else None
+    if "variants" in update_data:
+        post.variants = json.dumps(normalize_variants(update_data["variants"]), ensure_ascii=False)
+
+    post.updated_at = datetime.utcnow()
+    session.add(post)
+    session.commit()
+    session.refresh(post)
+    return load_post_entity(post)
+
     if "title" in update_data:
         post.title = update_data["title"].strip()
     if "tone" in update_data:
         post.tone = update_data["tone"].strip()
     if "content" in update_data:
-        validate_content_length(post.platform, update_data["content"])
+        platform_for_content = update_data.get("platform", post.platform)
+        validate_content_length(platform_for_content, update_data["content"])
         post.content = update_data["content"].strip()
     if "hashtags" in update_data:
         post.hashtags = json.dumps(normalize_hashtags(update_data["hashtags"]), ensure_ascii=False)
