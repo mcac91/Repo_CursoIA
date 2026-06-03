@@ -8,6 +8,8 @@ from enum import Enum
 
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException, status
+from contextlib import asynccontextmanager
+
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 from sqlalchemy import Column, DateTime, Integer, String, Text, create_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, sessionmaker
@@ -59,7 +61,15 @@ PLATFORM_MAX_LENGTH = {
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
-app = FastAPI(title="Generador de Contenidos IA", version="1.0")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    create_database()
+    yield
+
+
+
+app = FastAPI(title="Generador de Contenidos IA", version="1.0", lifespan=lifespan)
+
 
 
 class Base(DeclarativeBase):
@@ -345,9 +355,9 @@ def load_post_entity(post: SocialMediaPost) -> SocialMediaPostSchema:
     )
 
 
-@app.on_event("startup")
-def on_startup() -> None:
-    create_database()
+
+
+
 
 
 @app.get("/api/contents", response_model=SocialMediaPostsSchema)
