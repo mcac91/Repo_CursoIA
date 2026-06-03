@@ -250,4 +250,4 @@ Dependencias declaradas en `requirements.txt`:
 - `.env.example`: ejemplo de configuración (no incluido aquí por restricciones de acceso al contenido).
 - `app.py`: aplicación completa.
 - `requirements.txt`: dependencias.
-- `test.md`: guía rápida para test con Swagger UI
+- `test_swagger.md`: guía rápida para test con Swagger UI
